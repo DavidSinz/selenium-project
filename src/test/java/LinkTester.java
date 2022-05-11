@@ -50,6 +50,12 @@ public class LinkTester {
         	String url = el.getAttribute("href");
         	verifyLinks(url);
         }
+        
+        nextPage("http://einlegesohlentest.de/");
+	}
+	
+	public void nextPage(String page) {
+		driver.findElement(By.xpath("//a[@href='" + page + "']")).click();
 	}
 	
 	public void verifyLinks(String linkURL) {
