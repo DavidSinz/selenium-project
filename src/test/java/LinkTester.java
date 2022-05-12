@@ -18,6 +18,50 @@ import java.util.ArrayList;
 
 public class LinkTester {
 	
+	public class Node {
+		
+		private String value = "";
+		private List<Node> linkedNodes = null;
+		
+		public Node(String value) {
+			this.value = value;
+			linkedNodes = new ArrayList<Node>();
+		}
+		
+		public void addLinkedNode(Node node) {
+			boolean nodeIsNew = true;
+			for (Node n : linkedNodes)
+				if (n.getValue().equals(node.getValue()))
+					nodeIsNew = false;
+			if (nodeIsNew) linkedNodes.add(node);
+		}
+		
+		public String[] getLinkedNodes() {
+			String[] result = new String[linkedNodes.size()];
+			for (int i = 0; i < result.length; i++) 
+				result[i] = linkedNodes.get(i).getValue();
+			return result;
+		}
+		
+		public String getValue() { return value; }
+	}
+	
+	public class WebsiteCrawler {
+		
+		private List<String> crawledPages = null;
+		
+		public WebsiteCrawler() {
+			
+		}
+	}
+	
+	public class Scraper {
+		
+		Scraper() { 
+			
+		}
+	}
+	
 	WebDriver driver;
 	
 	String baseURLStr = "http://einlegesohlentest.de/einlegesohlen/";
@@ -38,7 +82,8 @@ public class LinkTester {
 
 	@Test
 	public void test() {
-        driver.get(baseURLStr);
+		
+        /*driver.get(baseURLStr);
 
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
         
@@ -51,7 +96,7 @@ public class LinkTester {
         	verifyLinks(url);
         }
         
-        nextPage("http://einlegesohlentest.de/");
+        nextPage("http://einlegesohlentest.de/");*/
 	}
 	
 	public void nextPage(String page) {
