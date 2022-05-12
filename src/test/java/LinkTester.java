@@ -46,27 +46,12 @@ public class LinkTester {
 		public String getValue() { return value; }
 	}
 	
-	public class WebsiteCrawler {
-		
-		private List<String> crawledPages = null;
-		
-		public WebsiteCrawler() {
-			
-		}
-	}
-	
-	public class Scraper {
-		
-		Scraper() { 
-			
-		}
-	}
-	
 	WebDriver driver;
 	
-	String baseURLStr = "http://einlegesohlentest.de/einlegesohlen/";
+	String baseURLStr = "http://einlegesohlentest.de/";
 	
-	ArrayList<String> workingLinks;
+	ArrayList<String> openLinks;
+	ArrayList<String> completedLinks;
 	ArrayList<String> brokenLinks;
 	
 	
@@ -76,31 +61,32 @@ public class LinkTester {
 		driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		
-		workingLinks = new ArrayList<String>();
+		openLinks = new ArrayList<String>();
+		completedLinks = new ArrayList<String>();
 		brokenLinks = new ArrayList<String>();
 	}
 
 	@Test
 	public void test() {
+        
+		String url = baseURLStr;
 		
-        /*driver.get(baseURLStr);
-
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
-        
-        List<WebElement> aLinks = driver.findElements(By.tagName("a"));
-        System.out.println("Total links on the webpage: " + aLinks.size());
-        
-        for (int i = 0; i < aLinks.size(); i++) {
-        	WebElement el = aLinks.get(i);
-        	String url = el.getAttribute("href");
-        	verifyLinks(url);
-        }
-        
-        nextPage("http://einlegesohlentest.de/");*/
-	}
-	
-	public void nextPage(String page) {
-		driver.findElement(By.xpath("//a[@href='" + page + "']")).click();
+        do {
+        	driver.get(url);
+        	driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
+            List<WebElement> aLinks = driver.findElements(By.tagName("a"));
+            
+            for (int i = 0; i < aLinks.size(); i++) {
+            	WebElement el = aLinks.get(i);
+            	String linkURL = el.getAttribute("href");
+            	verifyLinks(linkURL);
+            }
+            
+            url = openLinks.get(0);
+            openLinks.remove(0);
+            completedLinks.add(url);
+            
+        } while (openLinks.size() > 0);
 	}
 	
 	public void verifyLinks(String linkURL) {
@@ -115,7 +101,9 @@ public class LinkTester {
 				brokenLinks.add(linkURL);
 				System.out.println(linkURL + " - " + con.getResponseMessage() + " is a broken link");
 			} else {
-				workingLinks.add(linkURL);
+				if (!openLinks.contains(linkURL) && linkURL.indexOf("einlegesohlentest") != -1) {
+					openLinks.add(linkURL);
+				}
 				System.out.println(linkURL + " - " + con.getResponseMessage());
 			}
 		} catch (Exception e) {}
