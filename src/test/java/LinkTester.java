@@ -45,40 +45,43 @@ public class LinkTester {
 		
         do {
         	driver.get(url);
-        	driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
-            List<WebElement> aLinks = driver.findElements(By.tagName("a"));
+        	
+            List<WebElement> linkElements = driver.findElements(By.tagName("a"));
             
-            for (int i = 0; i < aLinks.size(); i++) {
-            	WebElement el = aLinks.get(i);
-            	String linkURL = el.getAttribute("href");
-            	verifyLinks(linkURL);
+            for (WebElement linkEl : linkElements) {
+            	String linkURL = linkEl.getAttribute("href");
+            	if (linkIsValid(linkURL)) {
+            		if (!openLinks.contains(linkURL)
+            				&& linkURL.indexOf("einlegesohlentest") != -1
+            				&& !completedLinks.contains(linkURL))
+    					openLinks.add(linkURL);
+            	}
+            	else brokenLinks.add(linkURL);
             }
             
             url = openLinks.get(0);
             openLinks.remove(0);
             completedLinks.add(url);
             
+            //for (String s : openLinks) System.out.println();
+            System.out.println("Length of open links: " + openLinks.size());
+            System.out.println("Length of completed links: " + completedLinks.size() + "\n");
+            
         } while (openLinks.size() > 0);
 	}
 	
-	public void verifyLinks(String linkURL) {
+	
+	// check if the link URL is valid
+	public boolean linkIsValid(String linkURL) {
 		try {
 			URL url = new URL(linkURL);
-			
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setConnectTimeout(5000);
 			con.connect();
-			
-			if (con.getResponseCode() >= 400) {
-				brokenLinks.add(linkURL);
-				System.out.println(linkURL + " - " + con.getResponseMessage() + " is a broken link");
-			} else {
-				if (!openLinks.contains(linkURL) && linkURL.indexOf("einlegesohlentest") != -1) {
-					openLinks.add(linkURL);
-				}
-				System.out.println(linkURL + " - " + con.getResponseMessage());
-			}
-		} catch (Exception e) {}
+			if (con.getResponseCode() >= 400) 
+				return false;
+			else return true;
+		} catch (Exception e) { return false; }
 	}
 	
 	@After
@@ -87,5 +90,4 @@ public class LinkTester {
 			driver.quit();
 		}
 	}
-
 }
