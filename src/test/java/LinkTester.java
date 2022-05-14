@@ -18,34 +18,6 @@ import java.util.ArrayList;
 
 public class LinkTester {
 	
-	public class Node {
-		
-		private String value = "";
-		private List<Node> linkedNodes = null;
-		
-		public Node(String value) {
-			this.value = value;
-			linkedNodes = new ArrayList<Node>();
-		}
-		
-		public void addLinkedNode(Node node) {
-			boolean nodeIsNew = true;
-			for (Node n : linkedNodes)
-				if (n.getValue().equals(node.getValue()))
-					nodeIsNew = false;
-			if (nodeIsNew) linkedNodes.add(node);
-		}
-		
-		public String[] getLinkedNodes() {
-			String[] result = new String[linkedNodes.size()];
-			for (int i = 0; i < result.length; i++) 
-				result[i] = linkedNodes.get(i).getValue();
-			return result;
-		}
-		
-		public String getValue() { return value; }
-	}
-	
 	WebDriver driver;
 	
 	String baseURLStr = "http://einlegesohlentest.de/";
