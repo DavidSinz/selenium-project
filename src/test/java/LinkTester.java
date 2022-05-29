@@ -45,7 +45,6 @@ public class LinkTester {
 		
         do {
         	driver.get(url);
-        	
             List<WebElement> linkElements = driver.findElements(By.tagName("a"));
             
             for (WebElement linkEl : linkElements) {
