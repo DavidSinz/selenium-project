@@ -1,3 +1,4 @@
+package linktester;
 
 public class BrokenLink {
 	

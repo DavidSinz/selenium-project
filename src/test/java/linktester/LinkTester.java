@@ -1,3 +1,5 @@
+package linktester;
+
 import static org.junit.Assert.*;
 
 import java.time.Duration;
@@ -16,6 +18,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 
+import linktester.BrokenLink;
+
+
 public class LinkTester {
 	
 	WebDriver driver;
@@ -24,7 +29,7 @@ public class LinkTester {
 	
 	ArrayList<String> openLinks;
 	ArrayList<String> completedLinks;
-	ArrayList<String> brokenLinks;
+	ArrayList<BrokenLink> brokenLinks;
 	
 	
 	@Before
@@ -35,7 +40,7 @@ public class LinkTester {
 		
 		openLinks = new ArrayList<String>();
 		completedLinks = new ArrayList<String>();
-		brokenLinks = new ArrayList<String>();
+		brokenLinks = new ArrayList<BrokenLink>();
 	}
 
 	@Test
@@ -55,7 +60,7 @@ public class LinkTester {
             				&& !completedLinks.contains(linkURL))
     					openLinks.add(linkURL);
             	}
-            	else brokenLinks.add(linkURL);
+            	else brokenLinks.add(new BrokenLink(url, linkURL));
             }
             
             url = openLinks.get(0);
@@ -63,9 +68,9 @@ public class LinkTester {
             completedLinks.add(url);
             
             //for (String s : openLinks) System.out.println();
-            System.out.println("Length of open links: " + openLinks.size());
-            System.out.println("Length of completed links: " + completedLinks.size() + "\n");
-            
+            //System.out.println("Length of open links: " + openLinks.size());
+            //System.out.println("Length of completed links: " + completedLinks.size() + "\n");
+            System.out.println(BrokenLink.getCount());
         } while (openLinks.size() > 0);
 	}
 	
